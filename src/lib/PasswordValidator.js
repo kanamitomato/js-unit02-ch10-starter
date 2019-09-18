@@ -3,26 +3,23 @@ import BaseValidator from './BaseValidator';
 export default class extends BaseValidator {
   constructor(val) {
     super(val, 'パスワード');
-    this._checkLength = this._checkLength.bind(this);
+    this.checkLength = this.checkLength.bind(this);
   }
+
   validate() {
-    return super._cannotEmpty()
-      .then(this._checkLength)
-      .then((res) => {
-        return { success: true }; // Promise.resolve({ success: true })と同一
-      })
-      .catch(err => {
-        return err; // Promise.resolve(err)と同一
-      });
+    return super.cannotEmpty()
+      .then(this.checkLength)
+      .then(() => ({ success: true }))// Promise.resolve({ success: true })と同一
+      .catch((err) => err); // Promise.resolve(err)と同一
   }
-  _checkLength() {
+
+  checkLength() {
     if (this.val.length >= 8) {
       return Promise.resolve();
-    } else {
-      return Promise.reject({
-        success: false,
-        message: 'パスワードが短すぎます。'
-      });
     }
+    return Promise.reject({
+      success: false,
+      message: 'パスワードが短すぎます。',
+    });
   }
 }
