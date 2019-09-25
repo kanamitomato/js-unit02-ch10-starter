@@ -3,17 +3,17 @@ import BaseValidator from './BaseValidator';
 export default class extends BaseValidator {
   constructor(val) {
     super(val, 'メールアドレス');
-    this.checkFormat = this.checkFormat.bind(this);
+    this._checkFormat = this._checkFormat.bind(this);
   }
 
   validate() {
-    return super.cannotEmpty()
-      .then(this.checkFormat)
+    return super._cannotEmpty()
+      .then(this._checkFormat)
       .then(() => ({ success: true }))
       .catch((err) => err);
   }
 
-  checkFormat() {
+  _checkFormat() {
     const re = /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i;
     const match = re.test(this.val); // マッチするならtrue、しないならfalseを返す。
     if (match) {
@@ -21,7 +21,7 @@ export default class extends BaseValidator {
     }
     return Promise.reject({
       success: false,
-      message: `${this.type}のフォーマットが異なります。`,
+      message: `${this.type}のフォーマットが異なります。`
     });
   }
 }
